@@ -44,17 +44,18 @@ def _main():
                         lowercase files/directories and found #includes')
     args = parser.parse_args()
 
-    print("This is so exciting...")
+    
     if args.dir is None:
         print("need to specify directory with -d or --directory")
         sys.exit(0)
     else:
-        dir = args.dir #os.path.abspath(args.dir)
-        print(f"Let's find files and folders in {dir}!")
+        dir = os.path.abspath(args.dir)
+        print(f"Working down from directory:\n\t{dir}!")
+        print("... now to find files and and folders!")
         lowercase_rename(dir)
         print("... now for the found #includes!")
         lowercase_includes(dir)
-        print("... done 'n done :)")
+        print("... done 'n done! :)")
 
 
 # call main if this script is being called by itself
