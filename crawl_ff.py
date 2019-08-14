@@ -1,4 +1,4 @@
-import glob, os, shutil, mmap
+import os, fileinput, argparse
 
 print("this is so exciting... let's find files and folders! :)")
 # os.chdir("/test_folder")
@@ -44,40 +44,28 @@ def lowercase_rename( dir ):
 def lowercase_includes( dir ):
     def rename_includes( root, items ):
         for name in items:
-            try:
-                # with open(items, 'rb', 0) as file, mmap.mmap(file.fileno(), 0, access.ACCESS_READ) as s:
-                #     if s.find("#include \""):
-                #         s = s.lower()
-                # print("checking file: " + name)
-                # if os.path.getsize(name) > 0:
-                print ("file: " + name + ", size: " \
-                        + str(os.path.getsize(os.path.abspath(os.path.join(root, name)))))
-                        # + os.path.getsize(os.path.abspath(name)))
-                        #+ os.stat(os.path.abspath(name)).st_size > 0)
-                # print (os.stat(os.path.abspath(name)).st_size)
-                
-                # print (str(os.path.getsize(os.path.abspath(name))))
-                
-
-                if os.path.getsize(os.path.abspath(os.path.join(root, name))) > 0: #os.path.getsize(name) > 0:
-                    # print("checking file: " + name)
-                    # print (str(os.path.getsize(os.path.abspath(os.path.join(root, name)))))
-                    with open( os.path.abspath(os.path.join(root, name)), 'w') as fileinput:
-                        for line in fileinput:
-                            print("found upper case on: " + line)
-                            # if line[:9] == "#include \"":
-                            if "#include" in line:
-                                line = line.lower()
-                                print("new line: " + line)
-                                fileinput.write(line)
-            # except OSError:
+            try:                       
+                if os.path.getsize(os.path.abspath(os.path.join(root, name))) > 0:
+                    for line in fileinput.input(os.path.abspath(os.path.join(root, name)), inplace=1):
+                        if "#include " in line:
+                            print(line.lower(), end='', flush=True)
             except Exception as err:
-                print("An exception happened: " + str(err))
-                # print("error")
+                print("An exception happened with file " + name + ": " + str(err))
                 pass
     
     for root, dirs, files in os.walk( dir, topdown=False ):
         rename_includes( root, files )
 
-lowercase_rename("tfc")
-lowercase_includes("tfc")
+def _main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--directory', dest='dir',
+                        type=str, help='the root directory in which to modify \
+                        lowercase files/directories and found #includes')
+    args = parser.parse_args()
+
+    if args.dir is None:
+        print("need to specify directory with -d or --directory")
+        sys.exit(0)
+    else:    
+        lowercase_rename(dir)
+        lowercase_includes(dir)
