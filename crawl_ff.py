@@ -52,7 +52,7 @@ def _main():
         dir = args.dir #os.path.abspath(args.dir)
         print(f"Let's find files and folders in {dir}!")
         lowercase_rename(dir)
-        print("Now for the found #includes!")
+        print("... now for the found #includes!")
         lowercase_includes(dir)
         print("... done 'n done :)")
 
